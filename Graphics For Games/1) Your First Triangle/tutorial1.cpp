@@ -18,6 +18,5 @@ int main()	{
 	while(w.UpdateWindow()  && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE)){
 		renderer.RenderScene();
 	}
-
 	return 0;
 }
