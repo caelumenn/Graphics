@@ -105,25 +105,25 @@ public:
 	static void		DrawDebugCross (DebugDrawMode mode, const Vector3 &at,const Vector3 &scale,const Vector3 &colour = Vector3(1,1,1));
 	static void		DrawDebugCircle(DebugDrawMode mode, const Vector3 &at,const float radius,const Vector3 &colour = Vector3(1,1,1));	
 	
-	void			SetAsDebugDrawingRenderer() {
+	void SetAsDebugDrawingRenderer() {
 		debugDrawingRenderer = this;
 	}
 
-	Shader*			GetCurrentShader() const {
+	Shader*	GetCurrentShader() const {
 		return currentShader;
 	}
 
 protected:
-	virtual void	Resize(int x, int y);	
-	void			UpdateShaderMatrices();
-	void			SetCurrentShader(Shader*s);
+	virtual void Resize(int x, int y);	
+	void UpdateShaderMatrices();
+	void SetCurrentShader(Shader*s);
 
-	void			SetTextureRepeating(GLuint target, bool state);
+	void SetTextureRepeating(GLuint target, bool state);
 
 	//void			SetShaderLight(const Light &l);
 
-	void			DrawDebugPerspective(Matrix4*matrix = 0);
-	void			DrawDebugOrtho(Matrix4*matrix = 0);
+	void DrawDebugPerspective(Matrix4*matrix = 0);
+	void DrawDebugOrtho(Matrix4*matrix = 0);
 
 	Shader* currentShader;
 	
@@ -133,9 +133,9 @@ protected:
 	Matrix4 viewMatrix;		//View matrix
 	Matrix4 textureMatrix;	//Texture matrix
 
-	int		width;			//Render area width (not quite the same as window width)
-	int		height;			//Render area height (not quite the same as window height)
-	bool	init;			//Did the renderer initialise properly?
+	int	width;			//Render area width (not quite the same as window width)
+	int	height;			//Render area height (not quite the same as window height)
+	bool init;			//Did the renderer initialise properly?
 
 	HDC		deviceContext;	//...Device context?
 	HGLRC	renderContext;	//Permanent Rendering Context
