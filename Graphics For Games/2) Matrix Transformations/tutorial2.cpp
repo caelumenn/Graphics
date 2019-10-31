@@ -45,9 +45,9 @@ int main() {
 			position.x+= 1.0f;
 
 		if(Window::GetKeyboard()->KeyDown(KEYBOARD_O))
-			position.z-= 1.0f;
+			position.z-= 100.0f;
 		if(Window::GetKeyboard()->KeyDown(KEYBOARD_P))
-			position.z+= 1.0f;
+			position.z+= 100.0f;
 
 		renderer.SetRotation(rotation);
 		renderer.SetScale(scale);
