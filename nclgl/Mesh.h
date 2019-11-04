@@ -1,7 +1,7 @@
 #pragma once
 #include "../../nclgl/OGLRenderer.h"
 enum MeshBuffer {
-	VERTEX_BUFFER, COLOUR_BUFFER, TEXTURE_BUFFER, MAX_BUFFER
+	VERTEX_BUFFER, COLOUR_BUFFER, TEXTURE_BUFFER ,MAX_BUFFER
 };
 class Mesh {
 public:
@@ -12,6 +12,7 @@ public:
 	static Mesh * GenerateTriangle();
 	void SetTexture(GLuint tex) { texture = tex; }
 	GLuint GetTexture() { return texture; }
+	static Mesh* GenerateQuad();
 protected:
 	void BufferData();
 
