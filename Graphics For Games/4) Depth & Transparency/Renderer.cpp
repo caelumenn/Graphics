@@ -57,7 +57,11 @@ void Renderer::ToggleObject() {
 }
 
 void Renderer::MoveObject(float by) {
-	positions[(int)modifyObject].z += by;}void Renderer::ToggleDepth() {
+	positions[(int)modifyObject].z += by;
+}
+
+
+void Renderer::ToggleDepth() {
 	usingDepth = !usingDepth;
 	usingDepth ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
 }
