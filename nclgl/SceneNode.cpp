@@ -1,7 +1,10 @@
 #include "SceneNode.h"
-SceneNode::SceneNode(Mesh * mesh, Vector4 colour) {
-	this -> mesh = mesh;
-	this -> colour = colour;
+SceneNode::SceneNode(Mesh* mesh, Vector4 colour) {
+	this->mesh = mesh;
+	this->colour = colour;
+	boundingRadius = 1.0f;
+	distanceFromCamera = 0.0f;
+
 	parent = NULL;
 	modelScale = Vector3(1, 1, 1);
 }
@@ -18,14 +21,18 @@ void SceneNode::AddChild(SceneNode * s) {
 }
 
 void SceneNode::Draw(const OGLRenderer & r) {
-	if (mesh) { mesh->Draw(); }}void SceneNode::Update(float msec) {
+	if (mesh) { mesh->Draw(); }
+}
+
+void SceneNode::Update(float msec) {
 	if (parent) { // This node has a parent ...
-		worldTransform = parent -> worldTransform * transform;
+		worldTransform = parent->worldTransform * transform;
 	}
 	else { // Root node , world transform is local transform !
 		worldTransform = transform;
 	}
-	for (vector < SceneNode* >::iterator i = children.begin();
-		i != children.end(); ++i) {
-		(*i) -> Update(msec);
-	}}
+	for (vector < SceneNode* >::iterator i = children.begin(); i != children.end(); ++i) {
+		(*i)->Update(msec);
+	}
+}
+
