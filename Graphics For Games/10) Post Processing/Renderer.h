@@ -2,7 +2,7 @@
 #include "../../nclgl/OGLRenderer.h"
 #include "./../nclgl/HeightMap.h"
 #include "./../nclgl/Camera.h"
-#define POST_PASSES 10
+#define POST_PASSES 20
 
 class Renderer : public OGLRenderer {
 public:

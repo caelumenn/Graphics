@@ -25,7 +25,6 @@ uncomment the MD5_USE_NORMALS define. If you want to use and MD5Mesh in the seco
 time lighting tutorial, uncomment both MD5_USE_NORMALS and MD5_USE_TANGENTS_BUMPMAPS
 */
 #define USE_MD5MESH
-//#define MD5_USE_TUTORIAL_SKINNING
 #define MD5_USE_HARDWARE_SKINNING
 //#define MD5_USE_NORMALS
 //#define MD5_USE_TANGENTS_BUMPMAPS

@@ -32,9 +32,8 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-
 	}
-	glGenFramebuffers(1, &bufferFBO); // We ’ll render the scene into this
+	glGenFramebuffers(1, &bufferFBO); // We’ll render the scene into this
 	glGenFramebuffers(1, &processFBO); // And do post processing in this
 
 	glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO);
@@ -42,8 +41,7 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D, bufferDepthTex, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, bufferColourTex[0], 0);
 	// We can check FBO attachment success using this command !
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) !=
-		GL_FRAMEBUFFER_COMPLETE || !bufferDepthTex || !bufferColourTex[0]) {
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE || !bufferDepthTex || !bufferColourTex[0]) {
 		return;
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -132,5 +130,3 @@ void Renderer::PresentScene() {
 	quad->Draw();
 	glUseProgram(0);
 }
-
-
