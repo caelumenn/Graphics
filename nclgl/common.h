@@ -13,7 +13,7 @@ _-_-_-_-_-_-_-""  ""
 #pragma once
 
 #define WEEK_2_CODE
-//#define WEEK_3_CODE
+#define WEEK_3_CODE
 
 /*
 As this tutorial series progresses, you'll learn how to generate normals, tangents,
@@ -26,7 +26,7 @@ time lighting tutorial, uncomment both MD5_USE_NORMALS and MD5_USE_TANGENTS_BUMP
 */
 #define USE_MD5MESH
 #define MD5_USE_HARDWARE_SKINNING
-//#define MD5_USE_NORMALS
+#define MD5_USE_NORMALS
 //#define MD5_USE_TANGENTS_BUMPMAPS
 
 

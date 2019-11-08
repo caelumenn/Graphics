@@ -1,7 +1,7 @@
 #pragma once
 #include "../../nclgl/OGLRenderer.h"
 enum MeshBuffer {
-	VERTEX_BUFFER, COLOUR_BUFFER, TEXTURE_BUFFER, INDEX_BUFFER, MAX_BUFFER
+	VERTEX_BUFFER, COLOUR_BUFFER, TEXTURE_BUFFER, NORMAL_BUFFER, INDEX_BUFFER, MAX_BUFFER
 };
 class Mesh {
 public:
@@ -15,6 +15,8 @@ public:
 	static Mesh* GenerateQuad();
 protected:
 	void BufferData();
+	void GenerateNormals();
+	Vector3* normals;
 
 	GLuint arrayObject;
 	GLuint bufferObject[MAX_BUFFER];
