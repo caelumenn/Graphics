@@ -12,13 +12,17 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	if (!heightMap->GetTexture()) {
 		return;
 	}
-	SetTextureRepeating(heightMap->GetTexture(), true);	projMatrix = Matrix4::Perspective(1.0f, 10000.0f, (float)width / (float)height, 45.0f);
+	SetTextureRepeating(heightMap->GetTexture(), true);
+	projMatrix = Matrix4::Perspective(1.0f, 10000.0f, (float)width / (float)height, 45.0f);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
-	init = true;}Renderer ::~Renderer(void) {
+	init = true;
+}
+
+Renderer ::~Renderer(void) {
 	delete heightMap;
 	delete camera;
 }
@@ -26,7 +30,9 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 void Renderer::UpdateScene(float msec) {
 	camera->UpdateCamera(msec);
 	viewMatrix = camera->BuildViewMatrix();
-}void Renderer::RenderScene() {
+}
+
+void Renderer::RenderScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glUseProgram(currentShader->GetProgram());
@@ -37,4 +43,6 @@ void Renderer::UpdateScene(float msec) {
 	heightMap->Draw();
 
 	glUseProgram(0);
-	SwapBuffers();}
+	SwapBuffers();
+}
+

@@ -11,4 +11,4 @@ protected:
 	Mesh* triangle;
 };
 
-
+

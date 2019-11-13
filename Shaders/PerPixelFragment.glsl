@@ -21,7 +21,7 @@ void main (void) {
 
     vec3 incident = normalize(lightPos - IN.worldPos);
     float lambert = max(0.0 , dot(incident , IN.normal));
-    float dist = length(lightPos - IN.worldPos );
+    float dist = length(lightPos - IN.worldPos);
     float atten = 1.0 - clamp(dist / lightRadius, 0.0, 1.0);
     vec3 viewDir = normalize(cameraPos - IN.worldPos);
     vec3 halfDir = normalize(incident + viewDir);
