@@ -27,7 +27,7 @@ time lighting tutorial, uncomment both MD5_USE_NORMALS and MD5_USE_TANGENTS_BUMP
 #define USE_MD5MESH
 #define MD5_USE_HARDWARE_SKINNING
 #define MD5_USE_NORMALS
-//#define MD5_USE_TANGENTS_BUMPMAPS
+#define MD5_USE_TANGENTS_BUMPMAPS
 
 
 /**

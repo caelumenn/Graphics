@@ -4,7 +4,7 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	projMatrix = Matrix4::Perspective(1.0f, 10000.0f, (float)width / (float)height, 45.0f);
 
 	camera = new Camera();
-	camera->SetPosition(Vector3(0, 100, 200.0f));
+	camera->SetPosition(Vector3(0, 100, 750.0f));
 
 	currentShader = new Shader(SHADERDIR"SceneVertex.glsl", SHADERDIR"SceneFragment.glsl");
 
@@ -61,9 +61,7 @@ void Renderer::BuildNodeLists(SceneNode* from) {
 		}
 	}
 
-	for (vector < SceneNode* >::const_iterator i =
-		from->GetChildIteratorStart();
-		i != from->GetChildIteratorEnd(); ++i) {
+	for (vector <SceneNode*>::const_iterator i = from->GetChildIteratorStart(); i != from->GetChildIteratorEnd(); ++i) {
 		BuildNodeLists((*i));
 	}
 }
@@ -87,8 +85,7 @@ void Renderer::DrawNodes() {
 
 void Renderer::DrawNode(SceneNode* n) {
 	if (n->GetMesh()) {
-		glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), " modelMatrix "), 1, false, (float*) &
-			(n->GetWorldTransform() * Matrix4::Scale(n->GetModelScale())));
+		glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false, (float*) &(n->GetWorldTransform() * Matrix4::Scale(n->GetModelScale())));
 
 		glUniform4fv(glGetUniformLocation(currentShader->GetProgram(), "nodeColour"), 1, (float*)& n->GetColour());
 

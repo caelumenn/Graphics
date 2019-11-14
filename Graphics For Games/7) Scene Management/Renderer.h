@@ -4,7 +4,8 @@
 #include "../../nclgl/SceneNode.h"
 #include "../../nclgl/Frustum.h"
 #include "CubeRobot.h"
-#include <algorithm> // For std :: sort ...
+#include <algorithm> // For std :: sort ...
+
 class Renderer :public OGLRenderer {
 public:
 	Renderer(Window& parent);
