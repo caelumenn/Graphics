@@ -253,8 +253,4 @@ void Renderer::CombineBuffers() {
 	quad->Draw();
 
 	glUseProgram(0);
-
 }
-
-
-
