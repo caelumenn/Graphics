@@ -3,12 +3,12 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	heightMap = new HeightMap(TEXTUREDIR "terrain.raw ");
 	camera = new Camera(-40, 270, Vector3(-2100, 3300, 2000));
 
-	currentShader = new Shader(SHADERDIR "TexturedVertex.glsl ", SHADERDIR "TexturedFragment.glsl ");
+	currentShader = new Shader(SHADERDIR"TexturedVertex.glsl", SHADERDIR"TexturedFragment.glsl");
 
 	if (!currentShader->LinkProgram()) {
 		return;
 	}
-	heightMap->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR "Barren Reds.JPG", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
+	heightMap->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR"Barren Reds.JPG", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
 	if (!heightMap->GetTexture()) {
 		return;
 	}

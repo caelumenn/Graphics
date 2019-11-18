@@ -25,24 +25,24 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 		}
 	}
 	heightMap = new HeightMap(TEXTUREDIR"terrain.raw");
-	heightMap->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR"Barren Reds.JPG ", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
+	heightMap->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR"Barren Reds.JPG", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
 
-	heightMap->SetBumpMap(SOIL_load_OGL_texture(TEXTUREDIR"Barren RedsDOT3.JPG ", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
+	heightMap->SetBumpMap(SOIL_load_OGL_texture(TEXTUREDIR"Barren RedsDOT3.JPG", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
 
 	SetTextureRepeating(heightMap->GetTexture(), true);
 	SetTextureRepeating(heightMap->GetBumpMap(), true);
 
 	sphere = new OBJMesh();
-	if (!sphere->LoadOBJMesh(MESHDIR "ico.obj")) {
+	if (!sphere->LoadOBJMesh(MESHDIR"nanosuit.obj")) {
 		return;
 	}
 
-	sceneShader = new Shader(SHADERDIR"bumpvertex.glsl ", SHADERDIR"bufferFragment.glsl");
+	sceneShader = new Shader(SHADERDIR"bumpvertex.glsl", SHADERDIR"bufferFragment.glsl");
 	if (!sceneShader->LinkProgram()) {
 		return;
 	}
 
-	combineShader = new Shader(SHADERDIR"combinevert.glsl ", SHADERDIR"combinefrag.glsl");
+	combineShader = new Shader(SHADERDIR"combinevert.glsl", SHADERDIR"combinefrag.glsl");
 	if (!combineShader->LinkProgram()) {
 		return;
 	}
@@ -184,9 +184,9 @@ void Renderer::DrawPointLights() {
 	glActiveTexture(GL_TEXTURE4);
 	glBindTexture(GL_TEXTURE_2D, bufferNormalTex);
 
-	glUniform3fv(glGetUniformLocation(currentShader->GetProgram(), "cameraPos"), 1, (float*)& camera->GetPosition());
+	glUniform3fv(glGetUniformLocation(currentShader->GetProgram(),"cameraPos"), 1, (float*)& camera->GetPosition());
 
-	glUniform2f(glGetUniformLocation(currentShader->GetProgram(), "pixelSize"), 1.0f / width, 1.0f / height);
+	glUniform2f(glGetUniformLocation(currentShader->GetProgram(),"pixelSize"), 1.0f / width, 1.0f / height);
 
 	Vector3 translate = Vector3((RAW_HEIGHT * HEIGHTMAP_X / 2.0f), 500, (RAW_HEIGHT * HEIGHTMAP_Z / 2.0f));
 

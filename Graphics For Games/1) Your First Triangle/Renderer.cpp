@@ -16,7 +16,7 @@ Renderer::~Renderer(void)	{
 }
 
 void Renderer::RenderScene()	{
-	glClearColor(0.2f,0.2f,0.2f,1.0f);
+	glClearColor(0.5f,0.5f,0.2f,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);	
 
 	glUseProgram(currentShader->GetProgram());

@@ -39,4 +39,4 @@ void CubeRobot::Update(float msec) {
 	rightArm->SetTransform(rightArm->GetTransform() * Matrix4::Rotation(msec / 10.0f, Vector3(1, 0, 0)));
 
 	SceneNode::Update(msec);
-}
+}
