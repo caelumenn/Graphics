@@ -13,8 +13,23 @@ public:
 	virtual void RenderScene();
 	virtual void UpdateScene(float msec);
 
-	OBJMesh* sphere; // Light volume
+	void MoveLight(float f);
 
+	OBJMesh* sphere; // Light volume
+	HeightMap* heightMap;
 	Camera* camera; // Our usual camera
+
+	Shader* lightShader;
+	Shader* reflectShader;
+	Shader* skyboxShader;
+	Light* light;
+	GLuint cubeMap;
+	Mesh* rain;
+	float rainRotate;
+protected:
+	void DrawHeightMap();
+	void DrawMesh();
+	void DrawSkybox();
+	void DrawRain();
 };
 

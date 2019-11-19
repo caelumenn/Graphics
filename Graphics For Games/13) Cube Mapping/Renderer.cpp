@@ -16,7 +16,7 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	}
 	quad->SetTexture(
 		SOIL_load_OGL_texture(
-			TEXTUREDIR "water.TGA",
+			TEXTUREDIR "rain.jpg",
 			SOIL_LOAD_AUTO,
 			SOIL_CREATE_NEW_ID,
 			SOIL_FLAG_MIPMAPS)

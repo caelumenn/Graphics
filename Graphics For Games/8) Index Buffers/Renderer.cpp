@@ -1,6 +1,6 @@
 #include "Renderer.h"
 Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
-	heightMap = new HeightMap(TEXTUREDIR "terrain.raw ");
+	heightMap = new HeightMap(TEXTUREDIR "terrain.raw");
 	camera = new Camera(-40, 270, Vector3(-2100, 3300, 2000));
 
 	currentShader = new Shader(SHADERDIR"TexturedVertex.glsl", SHADERDIR"TexturedFragment.glsl");

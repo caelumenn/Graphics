@@ -39,6 +39,9 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	floor->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR"brick.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
 	floor->SetBumpMap(SOIL_load_OGL_texture(TEXTUREDIR"brickDOT3.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
 
+	root = new SceneNode();
+	root->AddChild(new CubeRobot());
+
 	glEnable(GL_DEPTH_TEST);
 
 	projMatrix = Matrix4::Perspective(1.0f, 15000.0f, (float)width / (float)height, 45.0f);
@@ -64,6 +67,7 @@ Renderer ::~Renderer(void) {
 void Renderer::UpdateScene(float msec) {
 	camera->UpdateCamera(msec);
 	hellNode->Update(msec);
+	root->Update(msec);
 }
 
 void Renderer::RenderScene() {
@@ -93,6 +97,7 @@ void Renderer::DrawShadowScene() {
 
 	DrawFloor();
 	DrawMesh();
+	DrawNode(root);
 
 	glUseProgram(0);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -120,6 +125,7 @@ void Renderer::DrawCombinedScene() {
 
 	DrawFloor();
 	DrawMesh();
+	DrawNode(root);
 
 	glUseProgram(0);
 }
@@ -152,5 +158,19 @@ void Renderer::MoveLight(float f) {
 	light->SetPosition(pos);
 }
 
+void Renderer::DrawNode(SceneNode* n) {
+	if (n->GetMesh()) {
+		Matrix4 transform = n->GetWorldTransform() *
+			Matrix4::Scale(n->GetModelScale());
+		modelMatrix.ToIdentity();
+		Matrix4 tempMatrix = textureMatrix * modelMatrix;
+		glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "textureMatrix"), 1, false, *&tempMatrix.values);
+		glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false, (float*)& transform);
 
+		n->Draw(*this);
+	}
 
+	for (vector < SceneNode* >::const_iterator i = n->GetChildIteratorStart(); i != n->GetChildIteratorEnd(); ++i) {
+		DrawNode(*i);
+	}
+}
