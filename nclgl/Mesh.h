@@ -10,12 +10,12 @@ public:
 
 	virtual void Draw();
 	static Mesh* GenerateTriangle();
-	void SetTexture(GLuint tex) { texture = tex; }
-	GLuint GetTexture() { return texture; }
+	void SetTexture(GLuint tex) {texture = tex;}
+	GLuint GetTexture() {return texture;}
 	static Mesh* GenerateQuad();
 
-	void SetBumpMap(GLuint tex) { bumpTexture = tex; }
-	GLuint GetBumpMap() { return bumpTexture; }
+	void SetBumpMap(GLuint tex) {bumpTexture = tex;}
+	GLuint GetBumpMap() {return bumpTexture;}
 protected:
 	void BufferData();
 	void GenerateNormals();

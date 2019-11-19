@@ -14,12 +14,14 @@ public:
 
 	virtual void UpdateScene(float msec);
 	virtual void RenderScene();
+	void MoveLight(float f);
 
 protected:
 	void DrawMesh(); // New !
 	void DrawFloor(); // New !
 	void DrawShadowScene(); // New !
 	void DrawCombinedScene(); // New !
+	
 
 	Shader* sceneShader;
 	Shader* shadowShader;

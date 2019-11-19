@@ -104,7 +104,7 @@ void Renderer::RenderScene() {
 	glUseProgram(currentShader -> GetProgram());
 	UpdateShaderMatrices();
 
-	glUniform1i(glGetUniformLocation(currentShader -> GetProgram(),"diffuseTex"), 0);
+	glUniform1i(glGetUniformLocation(currentShader -> GetProgram(),"diffuseTex"), 1);
 	DrawNodes();
 
 	glUseProgram(0);

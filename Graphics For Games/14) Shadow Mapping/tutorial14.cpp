@@ -18,6 +18,9 @@ int main() {
 	w.ShowOSPointer(false);
 
 	while(w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE)){
+		if (Window::GetKeyboard()->KeyDown(KEYBOARD_UP)) {
+			renderer.MoveLight(10.0f);
+		}
 		renderer.UpdateScene(w.GetTimer()->GetTimedMS());
 		renderer.RenderScene();
 	}
