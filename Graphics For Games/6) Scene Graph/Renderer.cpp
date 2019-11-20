@@ -4,7 +4,7 @@ Renderer::Renderer(Window& parent) :OGLRenderer(parent) {
 	CubeRobot::CreateCube(); // Important !
 	CubeRobot::CreateMan();
 	camera = new Camera();
-	currentShader = new Shader(SHADERDIR "SceneVertex.glsl ", SHADERDIR "SceneFragment.glsl");
+	currentShader = new Shader(SHADERDIR"SceneVertex.glsl", SHADERDIR"SceneFragment.glsl");
 
 	if (!currentShader->LinkProgram()) {
 		return;
@@ -38,7 +38,7 @@ void Renderer::RenderScene() {
 	glUseProgram(currentShader -> GetProgram());
 	UpdateShaderMatrices();
 	
-	glUniform1i(glGetUniformLocation(currentShader -> GetProgram(),"diffuseTex"), 1);
+	glUniform1i(glGetUniformLocation(currentShader -> GetProgram(),"diffuseTex"), 0);
 	
 	DrawNode(root);
 	

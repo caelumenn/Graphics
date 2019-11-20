@@ -20,9 +20,9 @@ CubeRobot::CubeRobot(void) {
 	leftArm -> SetTransform(Matrix4::Translation(Vector3(0, 35, 0)));
 	head -> AddChild(leftArm);
 
-	rightArm = new SceneNode(Man, Vector4(0, 1, 1, 1)); // Blue !
+	rightArm = new SceneNode(Man, Vector4(1, 1, 1, 1)); 
 	rightArm -> SetModelScale(Vector3(5, 5, 5));
-	rightArm -> SetTransform(Matrix4::Translation(Vector3(0, 35, 0)));
+	rightArm -> SetTransform(Matrix4::Translation(Vector3(0, 30, 0)));
 	leftArm -> AddChild(rightArm);
 	//SceneNode * leftLeg = new SceneNode(cube, Vector4(0, 0, 1, 1)); // Blue !
 	//leftLeg -> SetModelScale(Vector3(3, -17.5, 3));
