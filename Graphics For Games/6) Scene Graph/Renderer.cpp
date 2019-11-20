@@ -2,6 +2,7 @@
 
 Renderer::Renderer(Window& parent) :OGLRenderer(parent) {
 	CubeRobot::CreateCube(); // Important !
+	CubeRobot::CreateMan();
 	camera = new Camera();
 	currentShader = new Shader(SHADERDIR "SceneVertex.glsl ", SHADERDIR "SceneFragment.glsl");
 

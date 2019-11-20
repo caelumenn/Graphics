@@ -13,7 +13,7 @@ void main (void) {
     multiply.x = 1.0f / projMatrix[0][0];
     multiply.y = 1.0f / projMatrix[1][1];
 
-vec3 tempPos = (position * multiply ) - vec3(0 ,0 ,1);
+    vec3 tempPos = (position * multiply ) - vec3(0 ,0 ,1);
     OUT.normal = transpose (mat3(viewMatrix)) * normalize(tempPos);
     gl_Position = vec4(position, 1.0);
 }

@@ -8,14 +8,22 @@ public:
 	~CubeRobot(void) {};
 	virtual void Update(float msec);
 	static void CreateCube() {
-		OBJMesh * m = new OBJMesh();
-		m -> LoadOBJMesh(MESHDIR "cube.obj");
+		OBJMesh* m = new OBJMesh();
+		m->LoadOBJMesh(MESHDIR "cube.obj");
 		cube = m;
 	}
-	static void DeleteCube() {delete cube;}
+
+	static void CreateMan() {
+		OBJMesh* m = new OBJMesh();
+		m->LoadOBJMesh(MESHDIR"nanosuit.obj");
+		Man = m;
+	}
+	static void DeleteCube() { delete cube; }
+	static void DeleteMan() { delete Man; }
 protected:
-	static Mesh * cube;
-	SceneNode * head;
-	SceneNode * leftArm;
-	SceneNode * rightArm;
+	static Mesh* Man;
+	static Mesh* cube;
+	SceneNode* head;
+	SceneNode* leftArm;
+	SceneNode* rightArm;
 };
