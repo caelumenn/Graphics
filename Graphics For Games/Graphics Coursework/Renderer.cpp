@@ -1,7 +1,15 @@
 #include "Renderer.h"
 Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
+
+	CubeRobot::CreateCube(); // Important !
+	CubeRobot::CreateMan();
+	root = new SceneNode();
+	root->AddChild(new CubeRobot());
+
 	camera = new Camera();
+
 	heightMap = new HeightMap(TEXTUREDIR"terrain.raw");
+
 	rain = Mesh::GenerateQuad();
 
 	camera->SetPosition(Vector3(RAW_WIDTH * HEIGHTMAP_X / 2.0f, 500.0f, RAW_WIDTH * HEIGHTMAP_X));
@@ -11,7 +19,8 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	reflectShader = new Shader(SHADERDIR"PerPixelVertex.glsl", SHADERDIR"reflectFragment.glsl");
 	skyboxShader = new Shader(SHADERDIR"skyboxVertex.glsl", SHADERDIR"skyboxFragment.glsl");
 	lightShader = new Shader(SHADERDIR"PerPixelVertex.glsl", SHADERDIR"PerPixelFragment.glsl");
-	if (!reflectShader->LinkProgram() || !lightShader->LinkProgram() || !skyboxShader->LinkProgram()) {
+	cubeShader = new Shader(SHADERDIR"SceneVertex.glsl", SHADERDIR"SceneFragment.glsl");
+	if (!reflectShader->LinkProgram() || !lightShader->LinkProgram() || !skyboxShader->LinkProgram() || !cubeShader->LinkProgram()) {
 		return;
 	}
 	rain->SetTexture(
@@ -65,6 +74,7 @@ Renderer ::~Renderer(void) {
 
 void Renderer::UpdateScene(float msec) {
 	camera->UpdateCamera(msec);
+	camera->UpdateFixedCamera(msec);
 	viewMatrix = camera->BuildViewMatrix();
 	light->SetPosition(camera->GetPosition());
 	rainRotate += msec / 1000.0f;
@@ -76,6 +86,7 @@ void Renderer::RenderScene() {
 	DrawSkybox();
 	DrawHeightMap();
 	DrawRain();
+	DrawNode(root);
 
 	SwapBuffers();
 }
@@ -83,10 +94,8 @@ void Renderer::RenderScene() {
 void Renderer::DrawSkybox() {
 	glDepthMask(GL_FALSE);
 	SetCurrentShader(skyboxShader);
-
 	UpdateShaderMatrices();
 	rain->Draw();
-
 	glUseProgram(0);
 	glDepthMask(GL_TRUE);
 }
@@ -113,18 +122,13 @@ void Renderer::DrawRain() {
 	SetCurrentShader(reflectShader);
 	SetShaderLight(*light);
 	glUniform3fv(glGetUniformLocation(currentShader->GetProgram(), "cameraPos"), 1, (float*)& camera->GetPosition());
-
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "diffuseTex"), 0);
-
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "cubeTex"), 2);
-
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMap);
 
 	float heightX = (RAW_WIDTH * HEIGHTMAP_X / 2.0f);
-
 	float heightY = 256 * HEIGHTMAP_Y / 4.0f;
-
 	float heightZ = (RAW_HEIGHT * HEIGHTMAP_Z / 2.0f);
 
 	modelMatrix = Matrix4::Translation(Vector3(heightX, heightY, heightZ)) *
@@ -134,6 +138,7 @@ void Renderer::DrawRain() {
 	textureMatrix = Matrix4::Scale(Vector3(10.0f, 10.0f, 10.0f)) *
 		Matrix4::Rotation(rainRotate, Vector3(0.0f, 0.0f, 1.0f));
 	UpdateShaderMatrices();
+
 	rain->Draw();
 
 	glUseProgram(0);
@@ -145,4 +150,31 @@ void Renderer::MoveLight(float f) {
 	light->SetPosition(camera->GetPosition());
 }
 
+void Renderer::DrawNode(SceneNode* n) {
+	SetCurrentShader(cubeShader);
+	/*SetShaderLight(*light);
+	glUniform3fv(glGetUniformLocation(currentShader->GetProgram(), "cameraPos"), 1, (float*)&camera->GetPosition());
+	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "diffuseTex"), 0);
+	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "bumpTex"), 1);
+	modelMatrix = Matrix4::Translation(Vector3(0, 0, 0)) *
+		Matrix4::Scale(Vector3(1, 1, 1)) *
+		Matrix4::Rotation(0, Vector3(0.0f, 0.0f, 0.0f));
+	textureMatrix.ToIdentity();
+	UpdateShaderMatrices();*/
+
+	if (n->GetMesh()) {
+		Matrix4 transform = n->GetWorldTransform() * Matrix4::Scale(n->GetModelScale());
+		glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false, (float*)&transform);
+
+		glUniform4fv(glGetUniformLocation(currentShader->GetProgram(), "nodeColour"), 1, (float*)&n->GetColour());
+
+		glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "useTexture"), (int)n->GetMesh()->GetTexture());
+		n->Draw(*this);
+	}
+
+	for (vector<SceneNode*>::const_iterator i = n->GetChildIteratorStart(); i != n->GetChildIteratorEnd(); ++i) {
+		DrawNode(*i);
+	}
+	glUseProgram(0);
+}
 

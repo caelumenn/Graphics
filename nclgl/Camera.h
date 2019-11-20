@@ -17,22 +17,26 @@ _-_-_-_-_-_-_-""  ""
 #include "Matrix4.h"
 #include "Vector3.h"
 
+#define numberCameraLocations 4
+
+struct cameraLocation {
+	float pitch;
+	float yaw;
+	Vector3 position;
+};
+
 class Camera	{
 public:
-	Camera(void){
-		yaw		= 0.0f;
-		pitch	= 0.0f;
-	};
+	//Fixed Camera Location
+	static cameraLocation FixedCameraLocations[numberCameraLocations];
 
-	Camera(float pitch, float yaw, Vector3 position){
-		this->pitch		= pitch;
-		this->yaw		= yaw;
-		this->position	= position;
-	}
+	Camera(void);
+	Camera(float pitch, float yaw, Vector3 position);
 
 	~Camera(void){};
 
 	void UpdateCamera(float msec = 10.0f);
+	void UpdateFixedCamera(float msec = 10.0f);
 
 	//Builds a view matrix for the current camera variables, suitable for sending straight
 	//to a vertex shader (i.e it's already an 'inverse camera matrix').
@@ -53,8 +57,17 @@ public:
 	//Sets pitch, in degrees
 	void	SetPitch(float p) {pitch = p;}
 
+	void calculateCatmoll_Rom();
+
+	bool fixedMode;
+	bool fixedMove;
+	void switchFixedMove();
+
 protected:
 	float	yaw;
 	float	pitch;
 	Vector3 position;
+
+	unsigned short int currentLocation;
+	float t; //interpolation value
 };
