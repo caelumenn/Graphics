@@ -6,26 +6,26 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	camera = new Camera();
 	camera->SetPosition(Vector3(0, 100, 750.0f));
 
-	currentShader = new Shader(SHADERDIR"SceneVertex.glsl", SHADERDIR"SceneFragment.glsl");
+	currentShader = new Shader(SHADERDIR"TexturedVertex.glsl", SHADERDIR"TexturedFragment.glsl");
 
-	quad = Mesh::GenerateQuad();
-	quad->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR"stainedglass.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
+	//quad = Mesh::GenerateQuad();
+	//quad->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR"stainedglass.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
 
-	if (!currentShader->LinkProgram() || !quad->GetTexture()) {
+	if (!currentShader->LinkProgram() /*|| !quad->GetTexture()*/) {
 		return;
 	}
 
 	root = new SceneNode();
 
-	for (int i = 0; i < 5; ++i) {
-		SceneNode* s = new SceneNode();
-		s->SetColour(Vector4(1.0f, 1.0f, 1.0f, 0.5f));
-		s->SetTransform(Matrix4::Translation(Vector3(0, 100.0f, -300.0f + 100.0f + 100 * i)));
-		s->SetModelScale(Vector3(100.0f, 100.0f, 100.0f));
-		s->SetBoundingRadius(100.0f);
-		s->SetMesh(quad);
-		root->AddChild(s);
-	}
+	//for (int i = 0; i < 5; ++i) {
+	//	SceneNode* s = new SceneNode();
+	//	//s->SetColour(Vector4(1.0f, 1.0f, 1.0f, 0.5f));
+	//	s->SetTransform(Matrix4::Translation(Vector3(0, 100.0f, -300.0f + 100.0f + 100 * i)));
+	//	s->SetModelScale(Vector3(100.0f, 100.0f, 100.0f));
+	//	s->SetBoundingRadius(100.0f);
+	//	s->SetMesh(quad);
+	//	root->AddChild(s);
+	//}
 
 	root->AddChild(new CubeRobot());
 	glEnable(GL_DEPTH_TEST);
@@ -36,7 +36,7 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 
 Renderer ::~Renderer(void) {
 	delete root;
-	delete quad;
+	//delete quad;
 	delete camera;
 	CubeRobot::DeleteCube();
 }
@@ -76,8 +76,7 @@ void Renderer::DrawNodes() {
 		i != nodeList.end(); ++i) {
 		DrawNode((*i));
 	}
-	for (vector < SceneNode* >::const_reverse_iterator i =
-		transparentNodeList.rbegin();
+	for (vector < SceneNode* >::const_reverse_iterator i = transparentNodeList.rbegin();
 		i != transparentNodeList.rend(); ++i) {
 		DrawNode((*i));
 	}
@@ -86,11 +85,6 @@ void Renderer::DrawNodes() {
 void Renderer::DrawNode(SceneNode* n) {
 	if (n->GetMesh()) {
 		glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false, (float*) &(n->GetWorldTransform() * Matrix4::Scale(n->GetModelScale())));
-
-		glUniform4fv(glGetUniformLocation(currentShader->GetProgram(), "nodeColour"), 1, (float*)& n->GetColour());
-
-		glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "useTexture"), (int)n->GetMesh()->GetTexture());
-
 		n->Draw(*this);
 	}
 }

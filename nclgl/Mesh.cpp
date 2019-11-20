@@ -35,6 +35,101 @@ Mesh ::~Mesh(void) {
 
 }
 
+Mesh* Mesh::GenerateCube() {
+	Mesh* m = new Mesh();
+	m->numVertices = 36;
+	m->type = GL_TRIANGLE_STRIP;
+
+	m->vertices = new Vector3[m->numVertices];
+	m->vertices[0] = Vector3(-0.5f, -0.5f, -0.5f);
+	m->vertices[1] = Vector3( 0.5f, -0.5f, -0.5f);
+	m->vertices[2] = Vector3( 0.5f,  0.5f, -0.5f);
+	m->vertices[3] = Vector3( 0.5f,  0.5f, -0.5f);
+	m->vertices[4] = Vector3(-0.5f,  0.5f, -0.5f);
+	m->vertices[5] = Vector3(-0.5f, -0.5f, -0.5f);
+
+	m->vertices[6]  = Vector3(-0.5f, -0.5f,  0.5f);
+	m->vertices[7]  = Vector3( 0.5f, -0.5f,  0.5f);
+	m->vertices[8]  = Vector3( 0.5f,  0.5f,  0.5f);
+	m->vertices[9]  = Vector3( 0.5f,  0.5f,  0.5f);
+	m->vertices[10] = Vector3(-0.5f,  0.5f,  0.5f);
+	m->vertices[11] = Vector3(-0.5f, -0.5f,  0.5f);
+
+	m->vertices[12] = Vector3(-0.5f,  0.5f,  0.5f);
+	m->vertices[13] = Vector3(-0.5f,  0.5f, -0.5f);
+	m->vertices[14] = Vector3(-0.5f, -0.5f, -0.5f);
+	m->vertices[15] = Vector3(-0.5f, -0.5f, -0.5f);
+	m->vertices[16] = Vector3(-0.5f, -0.5f,  0.5f);
+	m->vertices[17] = Vector3(-0.5f,  0.5f,  0.5f);
+
+	m->vertices[18] = Vector3( 0.5f,  0.5f,  0.5f);
+	m->vertices[19] = Vector3( 0.5f,  0.5f, -0.5f);
+	m->vertices[20] = Vector3( 0.5f, -0.5f, -0.5f);
+	m->vertices[21] = Vector3( 0.5f, -0.5f, -0.5f);
+	m->vertices[22] = Vector3( 0.5f, -0.5f,  0.5f);
+	m->vertices[23] = Vector3( 0.5f,  0.5f,  0.5f);
+
+	m->vertices[24] = Vector3(-0.5f, -0.5f, -0.5f); 
+	m->vertices[25] = Vector3( 0.5f, -0.5f, -0.5f);
+	m->vertices[26] = Vector3( 0.5f, -0.5f,  0.5f);
+	m->vertices[27] = Vector3( 0.5f, -0.5f,  0.5f);
+	m->vertices[28] = Vector3(-0.5f, -0.5f,  0.5f);
+	m->vertices[29] = Vector3(-0.5f, -0.5f, -0.5f);
+
+	m->vertices[30] = Vector3(-0.5f,  0.5f, -0.5f);
+	m->vertices[31] = Vector3( 0.5f,  0.5f, -0.5f);
+	m->vertices[32] = Vector3( 0.5f,  0.5f,  0.5f);
+	m->vertices[33] = Vector3( 0.5f,  0.5f,  0.5f);
+	m->vertices[34] = Vector3(-0.5f,  0.5f,  0.5f);
+	m->vertices[35] = Vector3(-0.5f,  0.5f, -0.5f);
+
+	m->textureCoords = new Vector2[m->numVertices];
+	m->textureCoords[0] = Vector2(0.0f, 0.0f);
+	m->textureCoords[1] = Vector2(1.0f, 0.0f);
+	m->textureCoords[2] = Vector2(1.0f, 1.0f);
+	m->textureCoords[3] = Vector2(1.0f, 1.0f);
+	m->textureCoords[4] = Vector2(0.0f, 1.0f);
+	m->textureCoords[5] = Vector2(0.0f, 0.0f);
+
+	m->textureCoords[6] =  Vector2(0.0f, 0.0f);
+	m->textureCoords[7] =  Vector2(1.0f, 0.0f);
+	m->textureCoords[8] =  Vector2(1.0f, 1.0f);
+	m->textureCoords[9] =  Vector2(1.0f, 1.0f);
+	m->textureCoords[10] = Vector2(0.0f, 1.0f);
+	m->textureCoords[11] = Vector2(0.0f, 0.0f);
+
+	m->textureCoords[12] = Vector2(1.0f, 0.0f);
+	m->textureCoords[13] = Vector2(1.0f, 1.0f);
+	m->textureCoords[14] = Vector2(0.0f, 1.0f);
+	m->textureCoords[15] = Vector2(0.0f, 1.0f);
+	m->textureCoords[16] = Vector2(0.0f, 0.0f);
+	m->textureCoords[17] = Vector2(1.0f, 0.0f);
+
+	m->textureCoords[18] = Vector2(1.0f, 0.0f);
+	m->textureCoords[19] = Vector2(1.0f, 1.0f);
+	m->textureCoords[20] = Vector2(0.0f, 1.0f);
+	m->textureCoords[21] = Vector2(0.0f, 1.0f);
+	m->textureCoords[22] = Vector2(0.0f, 0.0f);
+	m->textureCoords[23] = Vector2(1.0f, 0.0f);
+
+	m->textureCoords[24] = Vector2(0.0f, 1.0f);
+	m->textureCoords[25] = Vector2(1.0f, 1.0f);
+	m->textureCoords[26] = Vector2(1.0f, 0.0f);
+	m->textureCoords[27] = Vector2(1.0f, 0.0f);
+	m->textureCoords[28] = Vector2(0.0f, 0.0f);
+	m->textureCoords[29] = Vector2(0.0f, 1.0f);
+
+	m->textureCoords[30] = Vector2(0.0f, 1.0f);
+	m->textureCoords[31] = Vector2(1.0f, 1.0f);
+	m->textureCoords[32] = Vector2(1.0f, 0.0f);
+	m->textureCoords[33] = Vector2(1.0f, 0.0f);
+	m->textureCoords[34] = Vector2(0.0f, 0.0f);
+	m->textureCoords[35] = Vector2(0.0f, 1.0f);
+
+	m->BufferData();
+	return m;
+}
+
 Mesh* Mesh::GenerateTriangle() {
 	Mesh* m = new Mesh();
 	m->numVertices = 3;

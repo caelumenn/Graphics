@@ -8,8 +8,8 @@ public:
 	~CubeRobot(void) {};
 	virtual void Update(float msec);
 	static void CreateCube() {
-		OBJMesh * m = new OBJMesh();
-		m -> LoadOBJMesh(MESHDIR "cube.obj");
+		Mesh * m = Mesh::GenerateCube();
+		m->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR"brick.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
 		cube = m;
 	}
 	static void DeleteCube() {delete cube;}

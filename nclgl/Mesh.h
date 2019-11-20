@@ -10,6 +10,7 @@ public:
 
 	virtual void Draw();
 	static Mesh* GenerateTriangle();
+	static Mesh* GenerateCube();
 	void SetTexture(GLuint tex) {texture = tex;}
 	GLuint GetTexture() {return texture;}
 	static Mesh* GenerateQuad();

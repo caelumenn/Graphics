@@ -4,6 +4,7 @@
 #include "../nclgl/Camera.h"
 #include "../nclgl/MD5Mesh.h"
 #include "../nclgl/MD5Node.h"
+//#include "CubeRobot.h"
 
 #define SHADOWSIZE 2048 // New !
 
@@ -19,6 +20,7 @@ public:
 protected:
 	void DrawMesh(); // New !
 	void DrawFloor(); // New !
+	void DrawCube();
 	void DrawShadowScene(); // New !
 	void DrawCombinedScene(); // New !
 	
@@ -32,6 +34,7 @@ protected:
 	MD5FileData* hellData;
 	MD5Node* hellNode;
 	Mesh* floor;
+	Mesh* cube;
 	Camera* camera;
 	Light* light;
 };

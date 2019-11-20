@@ -9,7 +9,7 @@ public:
 	virtual void Update(float msec);
 	static void CreateCube() {
 		OBJMesh * m = new OBJMesh();
-		m -> LoadOBJMesh(MESHDIR "cube.obj");
+		m -> LoadOBJMesh(MESHDIR"cube.obj");
 		cube = m;
 	}
 	static void DeleteCube() {delete cube;}

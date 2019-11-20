@@ -23,7 +23,7 @@ out vec4 fragColour;
 
 void main (void) {
     mat3 TBN = mat3(IN.tangent , IN.binormal , IN.normal);
-    vec3 normal = normalize(TBN *(texture2D(bumpTex , IN.texCoord).rgb * 2.0 - 1.0));
+    vec3 normal = normalize(TBN *(texture2D(bumpTex, IN.texCoord).rgb * 2.0 - 1.0));
 
     vec4 diffuse = texture2D(diffuseTex, IN.texCoord);
 

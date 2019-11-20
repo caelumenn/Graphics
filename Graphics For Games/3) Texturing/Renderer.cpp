@@ -1,7 +1,7 @@
 #include "Renderer.h"
 
 Renderer::Renderer(Window& parent) :OGLRenderer(parent) {
-	triangle = Mesh::GenerateTriangle();
+	triangle = Mesh::GenerateCube();
 	triangle->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR"brick.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, 0));
 
 	if (!triangle->GetTexture()) {

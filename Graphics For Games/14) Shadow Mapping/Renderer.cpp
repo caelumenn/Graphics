@@ -39,8 +39,10 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	floor->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR"brick.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
 	floor->SetBumpMap(SOIL_load_OGL_texture(TEXTUREDIR"brickDOT3.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
 
-	root = new SceneNode();
-	root->AddChild(new CubeRobot());
+	cube = Mesh::GenerateCube();
+	cube->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR"wall.jpg", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
+	//cube->SetBumpMap(SOIL_load_OGL_texture(TEXTUREDIR"brickDOT3.tga", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
+
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -67,7 +69,6 @@ Renderer ::~Renderer(void) {
 void Renderer::UpdateScene(float msec) {
 	camera->UpdateCamera(msec);
 	hellNode->Update(msec);
-	root->Update(msec);
 }
 
 void Renderer::RenderScene() {
@@ -95,9 +96,10 @@ void Renderer::DrawShadowScene() {
 
 	UpdateShaderMatrices();
 
+	DrawCube();
 	DrawFloor();
 	DrawMesh();
-	DrawNode(root);
+	
 
 	glUseProgram(0);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -123,9 +125,10 @@ void Renderer::DrawCombinedScene() {
 	viewMatrix = camera->BuildViewMatrix();
 	UpdateShaderMatrices();
 
+	DrawCube();
 	DrawFloor();
 	DrawMesh();
-	DrawNode(root);
+	
 
 	glUseProgram(0);
 }
@@ -158,19 +161,13 @@ void Renderer::MoveLight(float f) {
 	light->SetPosition(pos);
 }
 
-void Renderer::DrawNode(SceneNode* n) {
-	if (n->GetMesh()) {
-		Matrix4 transform = n->GetWorldTransform() *
-			Matrix4::Scale(n->GetModelScale());
-		modelMatrix.ToIdentity();
-		Matrix4 tempMatrix = textureMatrix * modelMatrix;
-		glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "textureMatrix"), 1, false, *&tempMatrix.values);
-		glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false, (float*)& transform);
+void Renderer::DrawCube() {
+	//modelMatrix.ToIdentity();
+	modelMatrix = Matrix4::Translation(Vector3(50,20,10)) * Matrix4::Rotation(0, Vector3(0, 0, 0)) * Matrix4::Scale(Vector3(50, 50, 5));
+	Matrix4 tempMatrix = textureMatrix * modelMatrix;
 
-		n->Draw(*this);
-	}
+	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "textureMatrix"), 1, false, *&tempMatrix.values);
+	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false, *&modelMatrix.values);
 
-	for (vector < SceneNode* >::const_iterator i = n->GetChildIteratorStart(); i != n->GetChildIteratorEnd(); ++i) {
-		DrawNode(*i);
-	}
+	cube->Draw();
 }
