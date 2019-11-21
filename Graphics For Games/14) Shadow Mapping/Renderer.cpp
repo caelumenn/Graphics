@@ -136,7 +136,6 @@ void Renderer::DrawMesh() {
 	hellNode->Draw(*this);
 }
 
-
 void Renderer::DrawFloor() {
 	modelMatrix = Matrix4::Rotation(90, Vector3(1, 0, 0)) * Matrix4::Scale(Vector3(450, 450, 1));
 	Matrix4 tempMatrix = textureMatrix * modelMatrix;

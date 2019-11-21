@@ -3,10 +3,10 @@
 uniform sampler2D diffuseTex ;
 uniform samplerCube cubeTex ;
 
-uniform vec4 lightColour ;
-uniform vec3 lightPos ;
+uniform vec4 lightColour[5] ;
+uniform vec3 lightPos[5] ;
 uniform vec3 cameraPos ;
-uniform float lightRadius ;
+uniform float lightRadius[5] ;
 
 in Vertex {
     vec4 colour ;
@@ -20,9 +20,13 @@ out vec4 fragColour ;
 void main (void) {
     vec4 diffuse = texture(diffuseTex, IN.texCoord) * IN.colour;
     vec3 incident = normalize(IN.worldPos - cameraPos );
-    float dist = length(lightPos - IN.worldPos);
-    float atten = 1.0 - clamp(dist / lightRadius, 0.2, 1.0);
-    vec4 reflection = texture(cubeTex ,reflect(incident, normalize(IN.normal)));
+    
+    for(int i = 0; i< 5; i++){
+        float dist = length(lightPos[i] - IN.worldPos);
+        float atten = 1.0 - clamp(dist / lightRadius[i], 0.2, 1.0);
+        vec4 reflection = texture(cubeTex ,reflect(incident, normalize(IN.normal)));
+        fragColour += (lightColour[i] * diffuse * atten) * (diffuse + reflection);
+    }
 
-    fragColour = (lightColour * diffuse * atten) * (diffuse + reflection);
+    
 }
