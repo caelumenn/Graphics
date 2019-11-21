@@ -40,8 +40,8 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	skyboxShader = new Shader(SHADERDIR"skyboxVertex.glsl", SHADERDIR"skyboxFragment.glsl");
 	lightShader = new Shader(SHADERDIR"PerPixelVertex.glsl", SHADERDIR"PerPixelFragment.glsl");
 	cubeShader = new Shader(SHADERDIR"SceneVertex.glsl", SHADERDIR"SceneFragment.glsl");
-	hellShader = new Shader(SHADERDIR"TexturedVertex.glsl", SHADERDIR"TexturedFragment.glsl");
-	if (!reflectShader->LinkProgram() || !lightShader->LinkProgram() || !skyboxShader->LinkProgram() || !cubeShader->LinkProgram() || !hellShader->LinkProgram()) {
+	
+	if (!reflectShader->LinkProgram() || !lightShader->LinkProgram() || !skyboxShader->LinkProgram() || !cubeShader->LinkProgram()) {
 		return;
 	}
 
@@ -193,7 +193,9 @@ void Renderer::DrawNode(SceneNode* n) {
 }
 
 void Renderer::Drawhell() {
-	SetCurrentShader(hellShader);
+	SetCurrentShader(lightShader);
+	SetShaderLight(light);
+	glUniform3fv(glGetUniformLocation(currentShader->GetProgram(), "cameraPos"), 1, (float*)& camera->GetPosition());
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "diffuseTex"), 0);
 	modelMatrix = Matrix4::Translation(Vector3(1000, 50, 1000)) * Matrix4::Scale(Vector3(-10,10,10));
 	textureMatrix.ToIdentity();
