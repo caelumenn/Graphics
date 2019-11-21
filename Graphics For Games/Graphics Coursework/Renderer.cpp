@@ -87,8 +87,8 @@ Renderer ::~Renderer(void) {
 	delete reflectShader;
 	delete skyboxShader;
 	delete lightShader;
-	delete hellShader;
 	delete[] light;
+
 	delete root;
 	delete hellData;
 	delete hellNode;
