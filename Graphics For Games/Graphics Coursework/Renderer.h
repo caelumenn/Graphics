@@ -5,6 +5,8 @@
 #include "../nclgl/heightmap.h"
 #include "../nclgl/Light.h"
 #include "CubeRobot.h"
+#include "../nclgl/MD5Mesh.h"
+#include "../nclgl/MD5Node.h"
 class Renderer : public OGLRenderer
 {
 public:
@@ -16,6 +18,7 @@ public:
 
 	void MoveLight(float f);
 	void DrawNode(SceneNode* n);
+	void Drawhell();
 
 	OBJMesh* sphere; // Light volume
 	HeightMap* heightMap;
@@ -25,11 +28,14 @@ public:
 	Shader* reflectShader;
 	Shader* skyboxShader;
 	Shader* cubeShader;
-	Light* light;
+	Shader* hellShader;
+	Light** light;
 	GLuint cubeMap;
-	Mesh* rain;
+	Mesh* water;
 	float rainRotate;
 	SceneNode* root;
+	MD5FileData* hellData;
+	MD5Node* hellNode;
 
 protected:
 	void DrawHeightMap();

@@ -6,23 +6,25 @@ Mesh* CubeRobot::Man = NULL;
 CubeRobot::CubeRobot(void) {
 	// Optional , uncomment if you want a local origin marker !
 	// SetMesh ( cube );
+	transform = Matrix4::Translation(Vector3(500, 500, 0));
+
 	SceneNode * body = new SceneNode(cube, Vector4(1, 0, 0, 1)); // Red !
-	body -> SetModelScale(Vector3(25, 25, 25));
-	body -> SetTransform(Matrix4::Translation(Vector3(0, 35, 0)));
+	body -> SetModelScale(Vector3(250, 250, 250));
+	body -> SetTransform(Matrix4::Translation(Vector3(0, 350, 0)));
 	AddChild(body);
 	head = new SceneNode(cube, Vector4(0, 1, 0, 1)); // Green !
-	head -> SetModelScale(Vector3(20, 20, 20));
-	head -> SetTransform(Matrix4::Translation(Vector3(0, 35, 0)));
+	head -> SetModelScale(Vector3(200, 200, 200));
+	head -> SetTransform(Matrix4::Translation(Vector3(0, 350, 0)));
 	body -> AddChild(head);
 	
 	leftArm = new SceneNode(cube, Vector4(0, 0, 1, 1)); // Blue !
-	leftArm -> SetModelScale(Vector3(15, 15, 15));
-	leftArm -> SetTransform(Matrix4::Translation(Vector3(0, 35, 0)));
+	leftArm -> SetModelScale(Vector3(150, 150, 150));
+	leftArm -> SetTransform(Matrix4::Translation(Vector3(0, 350, 0)));
 	head -> AddChild(leftArm);
 
 	rightArm = new SceneNode(Man, Vector4(1, 1, 1, 1)); 
-	rightArm -> SetModelScale(Vector3(5, 5, 5));
-	rightArm -> SetTransform(Matrix4::Translation(Vector3(0, 30, 0)));
+	rightArm -> SetModelScale(Vector3(50, 50, 50));
+	rightArm -> SetTransform(Matrix4::Translation(Vector3(0, 300, 0)));
 	leftArm -> AddChild(rightArm);
 	
 }//-msec / 10.0f,

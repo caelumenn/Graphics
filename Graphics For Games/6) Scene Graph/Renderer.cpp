@@ -3,6 +3,9 @@
 Renderer::Renderer(Window& parent) :OGLRenderer(parent) {
 	CubeRobot::CreateCube(); // Important !
 	CubeRobot::CreateMan();
+	root = new SceneNode();
+	root->AddChild(new CubeRobot());
+
 	camera = new Camera();
 	currentShader = new Shader(SHADERDIR"SceneVertex.glsl", SHADERDIR"SceneFragment.glsl");
 
@@ -14,8 +17,7 @@ Renderer::Renderer(Window& parent) :OGLRenderer(parent) {
 
 	camera->SetPosition(Vector3(0, 30, 175));
 
-	root = new SceneNode();
-	root->AddChild(new CubeRobot());
+	
 
 	glEnable(GL_DEPTH_TEST);
 	init = true;
@@ -24,6 +26,7 @@ Renderer::Renderer(Window& parent) :OGLRenderer(parent) {
 Renderer ::~Renderer(void) {
 	delete root;
 	CubeRobot::DeleteCube(); // Also important !
+	CubeRobot::DeleteMan();
 }
 
 void Renderer::UpdateScene(float msec) {

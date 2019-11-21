@@ -5,7 +5,7 @@
 class CubeRobot : public SceneNode {
 public:
 	CubeRobot(void);
-	~CubeRobot(void) {};
+	~CubeRobot(void);
 	virtual void Update(float msec);
 	static void CreateCube() {
 		OBJMesh* m = new OBJMesh();
