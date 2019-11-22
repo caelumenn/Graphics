@@ -7,6 +7,9 @@
 #include "CubeRobot.h"
 #include "../nclgl/MD5Mesh.h"
 #include "../nclgl/MD5Node.h"
+
+#define SHADOWSIZE 2048
+
 class Renderer : public OGLRenderer
 {
 public:
@@ -19,6 +22,8 @@ public:
 	void MoveLight(float f);
 	void DrawNode(SceneNode* n);
 	void Drawhell();
+	void DrawShadowScene(); // New !
+	void DrawCombinedScene(); // New !
 
 	OBJMesh* sphere; // Light volume
 	HeightMap* heightMap;
@@ -29,6 +34,11 @@ public:
 	Shader* skyboxShader;
 	Shader* cubeShader;
 	Shader* hellShader;
+	Shader* sceneShader;
+	Shader* shadowShader;
+
+	GLuint shadowTex;
+	GLuint shadowFBO;
 	Light** light;
 	GLuint cubeMap;
 	Mesh* water;

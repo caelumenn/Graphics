@@ -21,10 +21,11 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	for (int i = 0; i < 5; i++) {
 		light[i] = new Light;
 	}
+	//light[0]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X - RAW_HEIGHT * HEIGHTMAP_X / 16.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z / 16.0f)));
 	light[0]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 	light[0]->SetRadius((RAW_WIDTH * HEIGHTMAP_X)/3.0f);
-	light[1]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X / 2.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z / 2.0f)));
-	light[1]->SetColour(Vector4(0.0f, 0.0f, 1.0f, 1.0f));
+	light[1]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X / 4.0f ), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z)/ 2.0f));
+	light[1]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 	light[1]->SetRadius((RAW_WIDTH * HEIGHTMAP_X) / 3.0f);
 	light[2]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X / 4.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z - RAW_HEIGHT * HEIGHTMAP_Z / 4.0f)));
 	light[2]->SetColour(Vector4(1.0f, 0.0f, 1.0f, 1.0f));
@@ -40,8 +41,11 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	skyboxShader = new Shader(SHADERDIR"skyboxVertex.glsl", SHADERDIR"skyboxFragment.glsl");
 	lightShader = new Shader(SHADERDIR"PerPixelVertex.glsl", SHADERDIR"PerPixelFragment.glsl");
 	cubeShader = new Shader(SHADERDIR"SceneVertex.glsl", SHADERDIR"SceneFragment.glsl");
+	sceneShader = new Shader(SHADERDIR"shadowscenevert.glsl ", SHADERDIR"shadowscenefrag.glsl");
+	shadowShader = new Shader(SHADERDIR"shadowVert.glsl ", SHADERDIR"shadowFrag.glsl");
 	
-	if (!reflectShader->LinkProgram() || !lightShader->LinkProgram() || !skyboxShader->LinkProgram() || !cubeShader->LinkProgram()) {
+	if (!reflectShader->LinkProgram() || !lightShader->LinkProgram() || !skyboxShader->LinkProgram() || !cubeShader->LinkProgram()
+		|| !sceneShader->LinkProgram() || !shadowShader->LinkProgram()) {
 		return;
 	}
 
@@ -71,6 +75,24 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	SetTextureRepeating(heightMap->GetTexture(), true);
 	rainRotate = 0.0f;
 
+	glGenTextures(1, &shadowTex);
+	glBindTexture(GL_TEXTURE_2D, shadowTex);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOWSIZE, SHADOWSIZE, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glGenFramebuffers(1, &shadowFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowTex, 0);
+	glDrawBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 	projMatrix = Matrix4::Perspective(1.0f, 15000.0f, (float)width / (float)height, 45.0f);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -78,6 +100,8 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	
 	init = true;
+
+	
 }
 
 Renderer ::~Renderer(void) {
@@ -98,7 +122,7 @@ Renderer ::~Renderer(void) {
 void Renderer::UpdateScene(float msec) {
 	camera->UpdateCamera(msec);
 	camera->UpdateFixedCamera(msec);
-	viewMatrix = camera->BuildViewMatrix();
+	//viewMatrix = camera->BuildViewMatrix();
 	light[0]->SetPosition(camera->GetPosition());
 	rainRotate += msec / 1000.0f;
 	root->Update(msec);
@@ -107,9 +131,11 @@ void Renderer::UpdateScene(float msec) {
 
 void Renderer::RenderScene() {
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
+	DrawShadowScene();
+	viewMatrix = camera->BuildViewMatrix();
 	DrawSkybox();
-	DrawHeightMap();
+	//DrawHeightMap();
+	DrawCombinedScene();
 	DrawRain();
 	DrawNode(root);
 	Drawhell();
@@ -202,6 +228,60 @@ void Renderer::Drawhell() {
 	UpdateShaderMatrices();
 
 	hellNode->Draw(*this);
+
+	glUseProgram(0);
+}
+
+void Renderer::DrawShadowScene() {
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	glViewport(0, 0, SHADOWSIZE, SHADOWSIZE);
+
+	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+	SetCurrentShader(shadowShader);
+
+	viewMatrix = Matrix4::BuildViewMatrix(light[1]->GetPosition(),
+		Vector3(2050,200,2050)); 
+	textureMatrix = biasMatrix * (projMatrix * viewMatrix);
+
+	UpdateShaderMatrices();
+
+	modelMatrix.ToIdentity();
+	Matrix4 tempMatrix = textureMatrix * modelMatrix;
+	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "textureMatrix"), 1, false, *&tempMatrix.values);
+	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false, *&modelMatrix.values);
+
+	heightMap->Draw();
+	
+
+	glUseProgram(0);
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	glViewport(0, 0, width, height);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Renderer::DrawCombinedScene() {
+	SetCurrentShader(sceneShader);
+	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "diffuseTex"), 0);
+	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "bumpTex"), 1);
+	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "shadowTex"), 2);
+	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "numLights"), 5);
+	glUniform3fv(glGetUniformLocation(currentShader->GetProgram(), "cameraPos"), 1, (float*)& camera->GetPosition());
+
+	SetShaderLight(light);
+
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, shadowTex);
+
+	viewMatrix = camera->BuildViewMatrix();
+	UpdateShaderMatrices();
+
+	heightMap->Draw();
+	
 
 	glUseProgram(0);
 }
