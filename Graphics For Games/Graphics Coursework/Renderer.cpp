@@ -24,17 +24,17 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	//light[0]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X - RAW_HEIGHT * HEIGHTMAP_X / 16.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z / 16.0f)));
 	light[0]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 	light[0]->SetRadius((RAW_WIDTH * HEIGHTMAP_X)/3.0f);
-	light[1]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X / 4.0f ), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z)/ 2.0f));
+	light[1]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X / 4.0f ), 700.0f, (RAW_HEIGHT * HEIGHTMAP_Z)/ 4.0f));
 	light[1]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 	light[1]->SetRadius((RAW_WIDTH * HEIGHTMAP_X) / 3.0f);
 	light[2]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X / 4.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z - RAW_HEIGHT * HEIGHTMAP_Z / 4.0f)));
-	light[2]->SetColour(Vector4(1.0f, 0.0f, 1.0f, 1.0f));
+	light[2]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 	light[2]->SetRadius((RAW_WIDTH * HEIGHTMAP_X) / 3.0f);
-	light[3]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X / 4.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z / 4.0f)));
-	light[3]->SetColour(Vector4(1.0f, 1.0f, 0.0f, 1.0f));
+	light[3]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X - RAW_HEIGHT * HEIGHTMAP_X / 4.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z / 4.0f)));
+	light[3]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 	light[3]->SetRadius((RAW_WIDTH * HEIGHTMAP_X) / 3.0f);
-	light[4]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X - RAW_HEIGHT * HEIGHTMAP_X / 16.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z / 16.0f)));
-	light[4]->SetColour(Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+	light[4]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X - RAW_HEIGHT * HEIGHTMAP_X / 4.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z - RAW_HEIGHT * HEIGHTMAP_Z / 4.0f)));
+	light[4]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 	light[4]->SetRadius((RAW_WIDTH * HEIGHTMAP_X) / 3.0f);
 
 	reflectShader = new Shader(SHADERDIR"PerPixelVertex.glsl", SHADERDIR"reflectFragment.glsl");
@@ -131,14 +131,25 @@ void Renderer::UpdateScene(float msec) {
 
 void Renderer::RenderScene() {
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	DrawShadowScene();
-	viewMatrix = camera->BuildViewMatrix();
-	DrawSkybox();
-	//DrawHeightMap();
-	DrawCombinedScene();
-	DrawRain();
-	DrawNode(root);
-	Drawhell();
+	int a = 0;
+	if (a == 0) {
+		viewMatrix = camera->BuildViewMatrix();
+		DrawSkybox();
+		//DrawHeightMap();
+		DrawRain();
+		DrawNode(root);
+		Drawhell();
+		DrawShadowScene();
+		DrawCombinedScene();
+	}
+	else {
+		viewMatrix = camera->BuildViewMatrix();
+		DrawSkybox();
+		DrawHeightMap();
+		DrawRain();
+		DrawNode(root);
+		Drawhell();
+	}
 	SwapBuffers();
 }
 
@@ -244,7 +255,7 @@ void Renderer::DrawShadowScene() {
 	SetCurrentShader(shadowShader);
 
 	viewMatrix = Matrix4::BuildViewMatrix(light[1]->GetPosition(),
-		Vector3(2050,200,2050)); 
+		Vector3(2050,100,2050)); 
 	textureMatrix = biasMatrix * (projMatrix * viewMatrix);
 
 	UpdateShaderMatrices();

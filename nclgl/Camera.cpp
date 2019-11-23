@@ -1,8 +1,8 @@
 #include "Camera.h"
 #include <cmath>
 
-cameraLocation Camera::FixedCameraLocations[4] = {{-10, 270, Vector3(-2100, 1000, 2050)},
-												  {-10, 0, Vector3(2050, 1000, 6200)},
+cameraLocation Camera::FixedCameraLocations[4] = {{-10, 270, Vector3(-1500, 1000, 2050)},
+												  {-10, 0, Vector3(1550, 1000, 6200)},
 												  {-10, 90, Vector3(6200, 1000, 2050)},
 												  {-10, 180, Vector3(2050, 1000, -2050)},
 };
