@@ -19,13 +19,15 @@ public:
 	virtual void RenderScene();
 	virtual void UpdateScene(float msec);
 
-	void MoveLight(float f);
 	void DrawNode(SceneNode* n);
 	void Drawhell();
 	void DrawShadowScene(); // New !
 	void DrawCombinedScene(); // New !
+	void DrawHeightMap();
+	void DrawMesh();
+	void DrawSkybox();
+	void DrawRain();
 
-	OBJMesh* sphere; // Light volume
 	HeightMap* heightMap;
 	Camera* camera; // Our usual camera
 
@@ -33,7 +35,6 @@ public:
 	Shader* reflectShader;
 	Shader* skyboxShader;
 	Shader* cubeShader;
-	Shader* hellShader;
 	Shader* sceneShader;
 	Shader* shadowShader;
 
@@ -46,11 +47,6 @@ public:
 	SceneNode* root;
 	MD5FileData* hellData;
 	MD5Node* hellNode;
-
-protected:
-	void DrawHeightMap();
-	void DrawMesh();
-	void DrawSkybox();
-	void DrawRain();
+	bool mode;
 };
 

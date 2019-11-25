@@ -36,18 +36,13 @@ in Vertex {
 out vec4 fragColour ;
 
 void main (void) {
-    if (useTexture > 0) {
-        vec4 diffuse = texture(diffuseTex, IN.texCoord) * IN.colour;
-        vec3 incident = normalize(IN.worldPos - cameraPos);
-        float dist = length(lightPos - IN.worldPos);
-        float atten = 1.0 - clamp(dist / lightRadius, 0.2, 1.0);
-
-        fragColour = (lightColour * diffuse * atten) * (diffuse);
-    }
-
-    vec3 incident = normalize(IN.worldPos - cameraPos );
+    fragColour = IN.colour;
+    vec3 incident = normalize(IN.worldPos - cameraPos);
     float dist = length(lightPos - IN.worldPos);
     float atten = 1.0 - clamp(dist / lightRadius, 0.2, 1.0);
-
-    fragColour = (lightColour * atten);
+    if (useTexture > 0) {
+        vec4 diffuse = texture(diffuseTex, IN.texCoord);
+        fragColour *= (lightColour * diffuse * atten) * (diffuse);
+    }
+    fragColour *= (lightColour * atten);
 }

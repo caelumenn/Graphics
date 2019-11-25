@@ -18,7 +18,14 @@ int main() {
 	w.ShowOSPointer(false);
 
 	while (w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE)) {
-		
+		if (Window::GetKeyboard()->KeyTriggered(KEYBOARD_C)) {
+			if (renderer.mode) {
+				renderer.mode = false;
+			}
+			else {
+				renderer.mode = true;
+			}
+		}
 		renderer.UpdateScene(w.GetTimer()->GetTimedMS());
 		renderer.RenderScene();
 	}

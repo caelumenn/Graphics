@@ -23,19 +23,19 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	}
 	//light[0]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X - RAW_HEIGHT * HEIGHTMAP_X / 16.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z / 16.0f)));
 	light[0]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-	light[0]->SetRadius((RAW_WIDTH * HEIGHTMAP_X)/3.0f);
+	light[0]->SetRadius((RAW_WIDTH * HEIGHTMAP_X)/2.0f);
 	light[1]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X / 4.0f ), 700.0f, (RAW_HEIGHT * HEIGHTMAP_Z)/ 4.0f));
 	light[1]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-	light[1]->SetRadius((RAW_WIDTH * HEIGHTMAP_X) / 3.0f);
+	light[1]->SetRadius((RAW_WIDTH * HEIGHTMAP_X) / 2.0f);
 	light[2]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X / 4.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z - RAW_HEIGHT * HEIGHTMAP_Z / 4.0f)));
 	light[2]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-	light[2]->SetRadius((RAW_WIDTH * HEIGHTMAP_X) / 3.0f);
+	light[2]->SetRadius((RAW_WIDTH * HEIGHTMAP_X) / 2.0f);
 	light[3]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X - RAW_HEIGHT * HEIGHTMAP_X / 4.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z / 4.0f)));
 	light[3]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-	light[3]->SetRadius((RAW_WIDTH * HEIGHTMAP_X) / 3.0f);
+	light[3]->SetRadius((RAW_WIDTH * HEIGHTMAP_X) / 2.0f);
 	light[4]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X - RAW_HEIGHT * HEIGHTMAP_X / 4.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z - RAW_HEIGHT * HEIGHTMAP_Z / 4.0f)));
 	light[4]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-	light[4]->SetRadius((RAW_WIDTH * HEIGHTMAP_X) / 3.0f);
+	light[4]->SetRadius((RAW_WIDTH * HEIGHTMAP_X) / 2.0f);
 
 	reflectShader = new Shader(SHADERDIR"PerPixelVertex.glsl", SHADERDIR"reflectFragment.glsl");
 	skyboxShader = new Shader(SHADERDIR"skyboxVertex.glsl", SHADERDIR"skyboxFragment.glsl");
@@ -99,6 +99,7 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	
+	this->mode = true;
 	init = true;
 
 	
@@ -111,12 +112,17 @@ Renderer ::~Renderer(void) {
 	delete reflectShader;
 	delete skyboxShader;
 	delete lightShader;
+	delete cubeShader;
+	delete shadowShader;
+	delete sceneShader;
 	delete[] light;
 
 	delete root;
 	delete hellData;
 	delete hellNode;
 	currentShader = 0;
+	glDeleteTextures(1, &shadowTex);
+	glDeleteFramebuffers(1, &shadowFBO);
 }
 
 void Renderer::UpdateScene(float msec) {
@@ -131,8 +137,8 @@ void Renderer::UpdateScene(float msec) {
 
 void Renderer::RenderScene() {
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	int a = 0;
-	if (a == 0) {
+	
+	if (this->mode) {
 		viewMatrix = camera->BuildViewMatrix();
 		DrawSkybox();
 		//DrawHeightMap();
@@ -211,6 +217,7 @@ void Renderer::DrawNode(SceneNode* n) {
 	SetShaderLight(*light[0]);
 	glUniform3fv(glGetUniformLocation(currentShader->GetProgram(), "cameraPos"), 1, (float*)& camera->GetPosition());
 	glUniform1i(glGetUniformLocation(currentShader->GetProgram(), "diffuseTex"), 0);
+	textureMatrix.ToIdentity();
 	UpdateShaderMatrices();
 	
 	if (n->GetMesh()) {
@@ -254,20 +261,17 @@ void Renderer::DrawShadowScene() {
 
 	SetCurrentShader(shadowShader);
 
-	viewMatrix = Matrix4::BuildViewMatrix(light[1]->GetPosition(),
-		Vector3(2050,100,2050)); 
+	viewMatrix = Matrix4::BuildViewMatrix(light[1]->GetPosition(), Vector3(2050,100,2050)); 
 	textureMatrix = biasMatrix * (projMatrix * viewMatrix);
-
+    modelMatrix.ToIdentity();
 	UpdateShaderMatrices();
 
-	modelMatrix.ToIdentity();
 	Matrix4 tempMatrix = textureMatrix * modelMatrix;
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "textureMatrix"), 1, false, *&tempMatrix.values);
 	glUniformMatrix4fv(glGetUniformLocation(currentShader->GetProgram(), "modelMatrix"), 1, false, *&modelMatrix.values);
 
 	heightMap->Draw();
 	
-
 	glUseProgram(0);
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	glViewport(0, 0, width, height);
