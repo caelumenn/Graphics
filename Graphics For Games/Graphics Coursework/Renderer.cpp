@@ -25,16 +25,12 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	light[0]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 	light[0]->SetRadius((RAW_WIDTH * HEIGHTMAP_X)/2.0f);
 	light[1]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X / 4.0f ), 700.0f, (RAW_HEIGHT * HEIGHTMAP_Z)/ 4.0f));
-	light[1]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 	light[1]->SetRadius((RAW_WIDTH * HEIGHTMAP_X) / 2.0f);
 	light[2]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X / 4.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z - RAW_HEIGHT * HEIGHTMAP_Z / 4.0f)));
-	light[2]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 	light[2]->SetRadius((RAW_WIDTH * HEIGHTMAP_X) / 2.0f);
 	light[3]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X - RAW_HEIGHT * HEIGHTMAP_X / 4.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z / 4.0f)));
-	light[3]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 	light[3]->SetRadius((RAW_WIDTH * HEIGHTMAP_X) / 2.0f);
 	light[4]->SetPosition(Vector3((RAW_HEIGHT * HEIGHTMAP_X - RAW_HEIGHT * HEIGHTMAP_X / 4.0f), 500.0f, (RAW_HEIGHT * HEIGHTMAP_Z - RAW_HEIGHT * HEIGHTMAP_Z / 4.0f)));
-	light[4]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 	light[4]->SetRadius((RAW_WIDTH * HEIGHTMAP_X) / 2.0f);
 
 	reflectShader = new Shader(SHADERDIR"PerPixelVertex.glsl", SHADERDIR"reflectFragment.glsl");
@@ -57,7 +53,12 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 			SOIL_FLAG_MIPMAPS)
 	);
 
-	heightMap->SetTexture(SOIL_load_OGL_texture(TEXTUREDIR"Barren Reds.JPG", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS));
+	heightMap->SetTexture(SOIL_load_OGL_texture(
+		TEXTUREDIR"Barren Reds.JPG", 
+		SOIL_LOAD_AUTO, 
+		SOIL_CREATE_NEW_ID, 
+		SOIL_FLAG_MIPMAPS)
+	);
 
 	cubeMap = SOIL_load_OGL_cubemap(
 		TEXTUREDIR"desertsky_lf.tga", TEXTUREDIR"desertsky_rt.tga",
@@ -101,8 +102,6 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	
 	this->mode = true;
 	init = true;
-
-	
 }
 
 Renderer ::~Renderer(void) {
@@ -140,6 +139,10 @@ void Renderer::RenderScene() {
 	
 	if (this->mode) {
 		viewMatrix = camera->BuildViewMatrix();
+		light[1]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		light[2]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		light[3]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		light[4]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
 		DrawSkybox();
 		//DrawHeightMap();
 		DrawRain();
@@ -150,6 +153,10 @@ void Renderer::RenderScene() {
 	}
 	else {
 		viewMatrix = camera->BuildViewMatrix();
+		light[1]->SetColour(Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+		light[2]->SetColour(Vector4(0.0f, 1.0f, 1.0f, 1.0f));
+		light[3]->SetColour(Vector4(1.0f, 0.0f, 1.0f, 1.0f));
+		light[4]->SetColour(Vector4(1.0f, 1.0f, 0.0f, 1.0f));
 		DrawSkybox();
 		DrawHeightMap();
 		DrawRain();
